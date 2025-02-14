@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container{
+            background-color: aqua;
+            text-align: center;
+            padding: 15px;
+            box-shadow: 10px 10px 20px black;
+            width: 500px;
+        }
+        input{
+            display: block;
+            margin: 70px auto;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        input:focus{
+            background-color: lightgreen;
+        }
+
+        input[type="submit"]{
+            cursor: pointer;
+            background-color: #009900;
+            width: 100px;
+        }
+        input[type="submit"]:hover{
+            background-color: #00ff00;
+        }
+    </style>
+    </head>
+    <body>
+        <main>
+            <div class="container">
+                <form action="">
+                <h2 style="font-size: 40px; text-shadow: 10px 10px 20px;">Zap into the Quiz Master</h2>
+                <input type="text" name="uname" id="uname" placeholder="Enter your username" required>
+                <input type="password" name="pwd" id="pwd" placeholder="Enter password" required>
+                <input type="submit" value="Submit">
+                <a href="{{url_for('register')}}">New here?No worries we got more space to add you too ;)</a>
+            </form>
+            </div>
+        </main>
+    </body>
+</html>
