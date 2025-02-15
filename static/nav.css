@@ -1,0 +1,40 @@
+nav{
+    background-color: black;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    position: relative;
+}
+a{
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+}
+.down{
+    display: flex;
+    position:absolute ;
+    right: 20px;
+}
+button{
+    padding: 10px 20px;
+    background-color: white;
+    cursor: pointer;
+}
+.drop {
+    display: none;
+    top: 100%;
+    background-color: #ff55ff;
+    position: absolute;
+    right: 0;
+}
+.down:hover .drop {
+    display: block; 
+}
+.drop a{
+    display: block;
+    background-color:#ff55ff;
+}
+
+.drop a:hover{
+    background-color: #ff99ff;
+}
