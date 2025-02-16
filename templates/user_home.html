@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width;initial-scale=1.0">
+        <title>Home</title>
+        <link rel="stylesheet" href="/static/nav.css">
+        <style>
+            main{
+                align-items: center;
+                margin-top: 100px;
+            }
+            legend{
+                text-align: center;
+            }
+            table,th,td{
+                border: 2px solid blue;
+                border-collapse: collapse;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div class="navbar">
+                    <a href="#">Home</a>
+                    <a href="#">Scores</a>
+                    <a href="#">Summary</a>
+                </div>
+                <div class="down">
+                    <div>
+                        <input type="search" name="search" id="search" placeholder="Search for quizzes">
+                    </div>
+                    <div class="down2">
+                    <button>Welcome {{name}}</button>
+                </div>
+                    <div class="drop">
+                        <a href="#">Edit profile</a>
+                        <a href="{{url_for('logout')}}">Logout</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <fieldset>
+                <legend>Upcoming Quizzes</legend>
+                <table width="100%">
+                    <th>Q ID</th>
+                    <th>Number of Questions</th>
+                    <th>Date</th>
+                    <th>Duration</th>
+                    <th>Action</th>
+                    {% for quiz in avail_quiz %}
+                    <tr>
+                        <td>{{quiz[0]}}</td>
+                        <td>{{quiz[1]}}</td>
+                        <td>{{quiz[2]}}</td>
+                        <td>{{quiz[3]}}</td>
+                        <td><a href="#">Attempt quiz</a></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </fieldset>
+        </main>
+    </body>
+</html>
