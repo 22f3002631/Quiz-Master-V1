@@ -38,7 +38,7 @@
     <body>
         <main> 
             <div class="container">
-                <form action="/register" method="POST">
+                <form action="{{url_for('register')}}" method="POST">
                 <h2 style="font-size: 40px; text-shadow: 10px 10px 20px;">Zap into the Quiz Master</h2>
                 <input type="text" name="uname" id="uname" placeholder="Enter username" required>
                 <input type="password" name="pwd" id="pwd" placeholder="Enter password" required>
