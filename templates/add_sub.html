@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width;initial-scale=1.0">
+        <title>Add Subject</title>
+        <link rel="stylesheet" href="/static/nav.css">
+        <style>
+            main{
+                align-items: center;
+                margin-top: 100px;
+            }
+            legend{
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div class="navbar">
+                    <a href="#">Home</a>
+                    <a href="#">Quiz</a>
+                    <a href="#">Summary</a>
+                </div>
+                <div class="down">
+                    <div>
+                        <input type="search" name="search" id="search" placeholder="Search for quizzes">
+                    </div>
+                    <div class="down2">
+                    <button>Welcome Admin</button>
+                </div>
+                    <div class="drop">
+                        <a href="#">Edit password</a>
+                        <a href="{{url_for('logout')}}">Logout</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <fieldset>
+                <legend>Add Subject</legend>
+                <form action="{{url_for('add_sub')}}" method="POST">
+                    <label for="sname">Subject Name:</label>
+                    <input type="text" name="sname" id="sname" required>
+                    <br>
+                    <label for="sdesc">Subject Description:</label>
+                    <br>
+                    <textarea name="sdesc" id="sdesc" required></textarea>
+                    <br>
+                    <input type="submit" value="Submit">
+                </form>
+            </fieldset>
+        </main>
+    </body>
+</html>
