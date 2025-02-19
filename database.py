@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS chapter(
 curobj.execute("""
 CREATE TABLE IF NOT EXISTS quiz(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    quiz_name TEXT NOT NULL,
     chapter_id INTEGER NOT NULL,
     date_of_quiz TEXT NOT NULL,
     time_duration TEXT NOT NULL,
