@@ -141,7 +141,85 @@ def add_chap(subject_id):
 
     return render_template('add_chap.html',subject_id=subject_id,sub_name=sub_name)
 
-@app.route('/view_quizzes/<int:chapter_id>')
+@app.route('/add_quiz/<int:chapter_id>',methods=['GET','POST'])
+def add_quiz(chapter_id):
+    if 'uid' not in session or session.get('uname')!='admin':
+       return redirect(url_for('login'))
+     
+    if request.method=='POST':
+        qname=request.form['qname']
+        doq=request.form['doq']
+        tdur=request.form['tdur']
+
+        conn=sql.connect('quiz_database.db')
+        curr=conn.cursor()
+        curr.execute('SELECT id from quiz where quiz_name=? and chapter_id=?',(qname,chapter_id))
+        ex_quiz=curr.fetchone()
+
+        if ex_quiz:
+            flash('Quiz with this name already exists','error')
+            return redirect(url_for('view_quizzes',chapter_id=chapter_id))
+
+        curr.execute('INSERT INTO quiz(quiz_name,chapter_id,date_of_quiz,time_duration) VALUES (?,?,?,?)',(qname,chapter_id,doq,tdur))
+        conn.commit()
+        conn.close()
+
+        flash('Quiz created succesfully','success')
+        return redirect(url_for('view_quizzes',chapter_id=chapter_id))
+    
+    return render_template('add_quiz.html',chapter_id=chapter_id)
+
+@app.route('/add_qsn/<int:chapter_id>/<int:quiz_id>',methods=['GET','POST'])
+def add_qsn(chapter_id,quiz_id):
+    if 'uid' not in session or session.get('uname')!='admin':
+       return redirect(url_for('login'))
+
+    if request.method=='POST':
+        qt=request.form['qtitle']
+        qs=request.form['qstat']
+        op1=request.form['op1']
+        op2=request.form['op2']
+        op3=request.form['op3']
+        op4=request.form['op4']
+        crtop=request.form['crtop']
+
+        conn=sql.connect('quiz_database.db')
+        curr=conn.cursor()
+        # curr.execute('SELECT id FROM quiz WHERE id=?',(quid,))
+        # quiz=curr.fetchone()
+
+        # if not quiz:
+        #     flash('Invalid Quiz ID!','error')
+        #     return(redirect(url_for('view_quizzes',chapter_id=chapter_id)))
+    
+        curr.execute('''
+        INSERT INTO question(quiz_id,question_title,question_statement,option1,option2,option3,option4,correct_option)
+        VALUES (?,?,?,?,?,?,?,?)
+        ''',(quiz_id,qt,qs,op1,op2,op3,op4,crtop))
+        conn.commit()
+
+        flash('Question added successfully','success')
+        conn.close()
+
+        return redirect(url_for('view_qsns',chapter_id=chapter_id,quiz_id=quiz_id))
+
+    return render_template('add_qsn.html',chapter_id=chapter_id,quiz_id=quiz_id)
+
+@app.route('/view_qsns/<int:chapter_id>/<int:quiz_id>')
+def view_qsns(chapter_id,quiz_id):
+    if 'uid' not in session or session.get('uname')!='admin':
+       return redirect(url_for('login'))
+    
+    conn=sql.connect('quiz_database.db')
+    curr=conn.cursor()
+    curr.execute('SELECT * from question where quiz_id=?',(quiz_id,))
+    avail_qsn=curr.fetchall()
+    print(avail_qsn)
+    conn.close()
+
+    return render_template('view_qsns.html',chapter_id=chapter_id,quiz_id=quiz_id,avail_qsn=avail_qsn)
+
+@app.route('/view_quizzes/<int:chapter_id>',methods=['GET','POST'])
 def view_quizzes(chapter_id):
     if 'uid' not in session or session.get('uname')!='admin':
        return redirect(url_for('login'))
@@ -159,8 +237,8 @@ def view_quizzes(chapter_id):
     chap_name=chapo['name']
 
     curr.execute('''
-        SELECT quiz.id,question.question_title,quiz.date_of_quiz,quiz.time_duration FROM quiz
-        LEFT JOIN question ON quiz.id=question,quiz_id
+        SELECT quiz.id,quiz.quiz_name,quiz.date_of_quiz,quiz.time_duration FROM quiz
+        LEFT JOIN question ON quiz.id=question.quiz_id
         WHERE chapter_id=?
         GROUP BY quiz.id
         ''',(chapter_id,))
