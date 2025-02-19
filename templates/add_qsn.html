@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width;initial-scale=1.0">
+        <title>Add Questions</title>
+        <link rel="stylesheet" href="/static/nav.css">
+        <style>
+            main{
+                align-items: center;
+                margin-top: 100px;
+            }
+            legend{
+                text-align: center;
+            }
+            table,th,td{
+                border: 2px solid blue;
+                border-collapse: collapse;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div class="navbar">
+                    <a href="#">Home</a>
+                    <a href="#">Quiz</a>
+                    <a href="#">Summary</a>
+                </div>
+                <div class="down">
+                    <div>
+                        <input type="search" name="search" id="search" placeholder="Search for quizzes">
+                    </div>
+                    <div class="down2">
+                    <button>Welcome Admin</button>
+                </div>
+                    <div class="drop">
+                        <a href="#">Edit password</a>
+                        <a href="{{url_for('logout')}}">Logout</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <fieldset>
+                <form action="{{url_for('add_qsn',quiz_id=quiz_id,chapter_id=chapter_id )}}" method="POST">
+                    <label for="qtitle">Question Title:</label>
+                    <input type="text" name="qtitle" id="qtitle" required>
+                    <br>
+                    <label for="qstat">Question statement:</label>
+                    <input type="text" name="qstat" id="qstat" required>
+                    <br>
+                    <label for="op1">Option 1</label>
+                    <input type="text" name="op1" id="op1" required>
+                    <br>
+                    <label for="op2">Option 2:</label>
+                    <input type="text" name="op2" id="op2" required>
+                    <br>
+                    <label for="op3">Option 3:</label>
+                    <input type="text" name="op3" id="op3" required>
+                    <br>
+                    <label for="op4">Option 4:</label>
+                    <input type="text" name="op4" id="op4" required>
+                    <br>
+                    <label for="crtop">Correct Option:</label>
+                    <input type="text" name="crtop" id="crtop" required>
+                    <br>
+                    <button type="submit">Add Question</button>
+                    <!-- <a href="{{url_for('view_quizzes',chapter_id=chapter_id )}}">
+                        <button>Close</button>
+                    </a> -->
+                </form>
+            </fieldset>
+        </main>
+    </body>
+</html>
