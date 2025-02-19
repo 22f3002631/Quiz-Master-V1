@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width;initial-scale=1.0">
+        <title>View Quizzes</title>
+        <link rel="stylesheet" href="/static/nav.css">
+        <style>
+            main{
+                align-items: center;
+                margin-top: 100px;
+            }
+            legend{
+                text-align: center;
+            }
+            table,th,td{
+                border: 2px solid blue;
+                border-collapse: collapse;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div class="navbar">
+                    <a href="#">Home</a>
+                    <a href="#">Quiz</a>
+                    <a href="#">Summary</a>
+                </div>
+                <div class="down">
+                    <div>
+                        <input type="search" name="search" id="search" placeholder="Search for quizzes">
+                    </div>
+                    <div class="down2">
+                    <button>Welcome Admin</button>
+                </div>
+                    <div class="drop">
+                        <a href="#">Edit password</a>
+                        <a href="{{url_for('logout')}}">Logout</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main>
+            <h1>Quizzes for {{chap_name}}</h1>
+            {% with msgs =get_flashed_messages(with_categories=true) %}
+                {% if msgs %}   
+                    {% for cat,msg in msgs %}
+                    <div class="cat">{{msg}}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Question title</th>
+                    <th>Date if Quiz</th>
+                    <th>Time Duration</th>
+                    <th>Actions</th>
+                </tr>
+                {% for quiz in avail_quiz %}
+                <tr>
+                    <td>{{quiz['id']}}</td>
+                    <td>{{quiz['quiz_name']}}</td>
+                    <td>{{quiz['date_of_quiz']}}</td>
+                    <td>{{quiz['time_duration']}}</td>
+                    <td><a style="color: black;" href="{{ url_for('view_qsns',quiz_id=quiz['id'],chapter_id=chapter_id) }}">View</a></td>
+                    <!-- also add for delete button here -->
+                    <!-- <a href="" onclick="return confirm('Are you sure?')">Delete</a> -->
+                </tr>
+                {% endfor %}
+            </table>
+            <a style="color: black;" href="{{ url_for('add_quiz',chapter_id=chapter_id) }}">Add a quiz</a>
+        </main>
+    </body>
+</html>
