@@ -16,7 +16,6 @@
             table,th,td{
                 border: 2px solid blue;
                 border-collapse: collapse;
-                color: blue;
             }
         </style>
     </head>
@@ -54,7 +53,7 @@
             <table>
                 <tr>
                     <th>ID</th>
-                    <th>Question title</th>
+                    <th>Quiz title</th>
                     <th>Option 1</th>
                     <th>Option 2</th>
                     <th>Option 3</th>
@@ -71,7 +70,7 @@
                     <td>{{qsn['option3']}}</td>
                     <td>{{qsn['option4']}}</td>
                     <td>{{qsn['correct_option']}}</td>
-                    <td><a style="color: black;" href="#">Edit</a></td>
+                    <td><a style="color: black;" href="{{url_for('edit_qsn',quiz_id=quiz_id,chapter_id=chapter_id,qsn_id=qsn['id'] )}}">Edit</a></td>
                     <!-- also add for delete button here -->
                     <!-- <a href="" onclick="return confirm('Are you sure?')">Delete</a> -->
                 </tr>
