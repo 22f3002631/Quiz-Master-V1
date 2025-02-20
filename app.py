@@ -293,7 +293,7 @@ def view_quizzes(chapter_id):
     if not chapo:
         flash('Invalid CHAPTER ID!','error')
         return redirect(url_for('admin_home'))
-
+  
     chap_name=chapo['name']
 # curr.execute('''
 #             SELECT chapter.id,chapter.name,COUNT(question.id) AS q_count
