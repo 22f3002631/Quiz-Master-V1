@@ -42,25 +42,22 @@
             </nav>
         </header>
         <main>
-            <fieldset>
-                <legend>Upcoming Quizzes</legend>
-                <table width="100%">
-                    <th>Q ID</th>
-                    <th>Number of Questions</th>
-                    <th>Date</th>
-                    <th>Duration</th>
-                    <th>Action</th>
-                    {% for quiz in avail_quiz %}
-                    <tr>
-                        <td>{{quiz[0]}}</td>
-                        <td>{{quiz[1]}}</td>
-                        <td>{{quiz[2]}}</td>
-                        <td>{{quiz[3]}}</td>
-                        <td><a href="#">Attempt quiz</a></td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            </fieldset>
+            {% for sub in sub_l %}
+            <table>
+                <caption>{{sub['name']}}</caption>
+                <tr>
+                    <th>Chapter name</th>
+                    <th>No. of Questions</th>
+                </tr>
+                <tr>
+                    {% for chap in sub['chapters'] %}
+                    <td>{{chap['name']}}</td>
+                    <td>{{chap['q_count']}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            
+            {% endfor %}
         </main>
     </body>
 </html>
