@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width;initial-scale=1.0">
+        <title>Attend Quiz</title>
+        <link rel="stylesheet" href="/static/nav.css">
+        <style>
+            main{
+                align-items: center;
+                margin-top: 100px;
+            }
+            legend{
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <h1>{{qname}}</h1>
+            <fieldset>
+                <form action="{{url_for('attend_quiz',quiz_id=quiz_id,chapter_id=chapter_id )}}" method="POST">
+                    {% for qsn in qsns %}
+                    <fieldset>
+                        <legend>{{qsn['question_title']}}</legend>
+                        <p>{{qsn['question_statement']}}</p>
+                        <input type="radio" name="{{qsn['id']}}" value="1" required> {{ qsn['option1'] }} <br>
+                        <input type="radio" name="{{qsn['id']}}" value="2" required> {{ qsn['option2'] }} <br>
+                        <input type="radio" name="{{qsn['id']}}" value="3" required> {{ qsn['option3'] }} <br>
+                        <input type="radio" name="{{qsn['id']}}" value="4" required> {{ qsn['option4'] }} <br>
+                    </fieldset>
+                    {% endfor %}
+                    <button type="submit">Submit Quiz</button>
+                </form>
+            </fieldset>
+        </main>
+    </body>
+</html>
