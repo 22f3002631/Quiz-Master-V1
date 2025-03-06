@@ -16,10 +16,11 @@
         </style>
     </head>
     <body>
-        <main>
-            <h1>{{qname}}</h1>
+       <main>
+            <h1>{{quiz['quiz_name']}}</h1>
+            <div id="timer">Time Left: <span id="time-left"></span></div>
             <fieldset>
-                <form action="{{url_for('attend_quiz',quiz_id=quiz_id,chapter_id=chapter_id )}}" method="POST">
+                <form id="quiz-form" action="{{url_for('attend_quiz',quiz_id=quiz_id,chapter_id=chapter_id )}}" method="POST">
                     {% for qsn in qsns %}
                     <fieldset>
                         <legend>{{qsn['question_title']}}</legend>
@@ -34,5 +35,24 @@
                 </form>
             </fieldset>
         </main>
+        <script>
+            let timeleft={{quiz['time_duration']}}*60;
+            let timerdisp=document.getElementById('time-left');
+            let quizform=document.getElementById('quiz-form')
+            function update(){
+                let mins=Math.floor(timeleft/60);
+                let secs=timeleft % 60;
+                timerdisp.innerText=mins+"m "+(secs<10?"0":"")+secs+" s";
+                if(timeleft<= 0){
+                    clearInterval(timer);
+                    quizform.submit();
+                }
+                else{
+                    timeleft--;
+                }
+            }
+            update();
+            let timer=setInterval(update,1000);
+        </script>
     </body>
 </html>
