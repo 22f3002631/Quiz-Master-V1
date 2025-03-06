@@ -1,6 +1,7 @@
 from flask import Flask,request,redirect,render_template,url_for,session,flash
 import sqlite3 as sql
 import datetime as dt
+from datetime import date
 
 app=Flask(__name__)
 app.secret_key="secracy_master"
@@ -440,13 +441,14 @@ def user_viewquiz(chapter_id):
     curr.execute('SELECT name from chapter where id=?',(chapter_id,))
     chapo=curr.fetchone()
 
+    tdy_date=date.today().strftime('%Y-%m-%d')
     chap_name=chapo['name']
     curr.execute('''
         SELECT quiz.id,quiz.quiz_name,quiz.date_of_quiz,quiz.time_duration,COUNT(question.id) as q_count FROM quiz
         LEFT JOIN question ON quiz.id=question.quiz_id
-        WHERE quiz.chapter_id=?
+        WHERE quiz.chapter_id=? and quiz.date_of_quiz=?
         GROUP BY quiz.id
-        ''',(chapter_id,))
+        ''',(chapter_id,tdy_date))
     
     avail_quiz=curr.fetchall()
     conn.close()
@@ -462,10 +464,8 @@ def attend_quiz(chapter_id,quiz_id):
     conn.row_factory=sql.Row
     curr=conn.cursor()
 
-    curr.execute('SELECT quiz_name FROM quiz where id=?',(quiz_id,))
+    curr.execute('SELECT quiz_name,time_duration FROM quiz where id=?',(quiz_id,))
     quiz=curr.fetchone()
-    qname=quiz['quiz_name']
-
     curr.execute('SELECT * from question WHERE quiz_id=? ORDER BY id',(quiz_id,))
     qsns=curr.fetchall()
     conn.close()
@@ -498,7 +498,7 @@ def attend_quiz(chapter_id,quiz_id):
         flash(f"QUIZ submitted succ,score: {score}/{totq}",'success')
         return redirect(url_for('user_home'))
     
-    return render_template('attend_quiz.html',qname=qname,qsns=qsns,quiz_id=quiz_id,chapter_id=chapter_id)
+    return render_template('attend_quiz.html',quiz=quiz,qsns=qsns,quiz_id=quiz_id,chapter_id=chapter_id)
 
 @app.route('/user_score',methods=['GET'])
 def user_score():
