@@ -73,7 +73,7 @@ curobj.execute('''
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     score_id INTEGER NOT NULL,
     question_id INTEGER NOT NULL,
-    selected_option INTEGER NOT NULL,
+    selected_option INTEGER,
     FOREIGN KEY (score_id) REFERENCES scores(id),
     FOREIGN KEY (question_id) REFERENCES question(id)
     )
