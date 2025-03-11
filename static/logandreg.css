@@ -1,0 +1,113 @@
+body{
+    height: 100vh;
+    margin: 0;
+    background: url('/static/login_bg.jpg') no-repeat center;
+    background-size: cover;
+}
+main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.container{
+    background-color: rgba(55, 88, 88, 0.4);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 10px 10px 20px rgba(0,0,0,0.5);
+    width: 500px;
+    backdrop-filter: blur(10px);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+.container:hover{
+    transform: scale(1.05);
+}
+.input-cont{
+    position: relative;
+    margin: 20px 0;
+    width: 100%;
+}
+label{
+    position: absolute;
+    left: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: rgb(235, 24, 24);
+}
+
+input{
+    width: 80%;
+    margin: 10px 0;
+    padding: 12px 15px;
+    border-radius: 25px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background-color: rgba(255,255,255,0.3);
+    color: black;
+    transition: all 0.3s ease;
+    
+}
+input:focus{
+    background-color: lightgreen;
+}
+
+input[type="submit"]{
+    cursor: pointer;
+    font-size: large;
+    background-color: green;
+    width: 100px;
+    transition: 0.2s;
+}
+
+#sub:hover{
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+#sub:active{
+    transform: scale(0.95);
+    background-color: #00ff00;
+}
+a{
+    font-size: large;
+    display: block;
+    margin-top: 20px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+}
+a:hover{
+    transform: scale(1.05);
+    text-decoration: underline;
+}
+h1{
+    color: cyan;
+    text-shadow: 2px 2px 5px rgba(0, 255, 255, 0.7);
+    font-size: 50px;
+}
+button{
+    display: block;
+    margin:20px auto;
+    padding: 15px;
+    font-size: large;
+    border-radius: 30px;
+    border: none;
+    background-color: green;
+    transition: all 0.4s ease-in-out;
+}
+button:hover{
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+#uname{
+    text-transform: lowercase;
+}
+@media (max-width: 480px) {
+    .container {
+        width: 80%;
+        padding: 20px;
+    }
+}
