@@ -6,16 +6,22 @@
         <title>Admin Home</title>
         <link rel="stylesheet" href="/static/nav.css">
         <style>
-            main{
+            main {
                 align-items: center;
                 margin-top: 100px;
             }
-            legend{
+            legend {
                 text-align: center;
             }
-            table,th,td{
+            table, th, td {
                 border: 2px solid blue;
                 border-collapse: collapse;
+            }
+            .search-container {
+                margin-bottom: 20px;
+                display: flex;
+                gap: 10px;
+                align-items: center;
             }
         </style>
     </head>
@@ -28,12 +34,16 @@
                     <a href="#">Summary</a>
                 </div>
                 <div class="down">
-                    <div>
-                        <input type="search" name="search" id="search" placeholder="Search for quizzes">
+                    <div class="search-container">
+                        <select id="cat">
+                            <option value="subject">Subject</option>
+                            <option value="chapter">Chapter</option>
+                        </select>
+                        <input type="search" id="search" placeholder="Search...">
                     </div>
                     <div class="down2">
-                    <button>Welcome Admin</button>
-                </div>
+                        <button>Welcome Admin</button>
+                    </div>
                     <div class="drop">
                         <a href="#">Edit password</a>
                         <a href="{{url_for('logout')}}">Logout</a>
@@ -42,40 +52,81 @@
             </nav>
         </header>
         <main>
-            {% with msgs=get_flashed_messages(with_categories=True) %}
+            {% with msgs = get_flashed_messages(with_categories=True) %}
                 {% if msgs %}
-                    {% for cat,msg in msgs %}
-                        <div class="cat">{{msg}}</div>
+                    {% for cat, msg in msgs %}
+                        <div class="cat">{{ msg }}</div>
                     {% endfor %}
                 {% endif %}
-                {% endwith %}
+            {% endwith %}
 
             {% for sub in sub_l %}
-            <table>
-                <caption>{{sub['name']}}</caption>
+            <table class="subject-table">
+                <caption class="subject-name">{{ sub['name'] }}</caption>
                 <tr>
                     <th>Chapter name</th>
                     <th>No. of Questions</th>
                     <th>Actions</th>
                 </tr>
                 {% for chap in sub['chapters'] %}
-                <tr>
-                    <td>{{chap['name']}}</td>
-                    <td>{{chap['q_count']}}</td>
-                    <td><a style="color: black;" href="{{url_for('view_quizzes',chapter_id=chap['id']) }}">View</a></td>
+                <tr class="chapter-row">
+                    <td class="chapter-name">{{ chap['name'] }}</td>
+                    <td>{{ chap['q_count'] }}</td>
+                    <td>
+                        <a style="color: black;" href="{{ url_for('view_quizzes', chapter_id=chap['id']) }}">View</a>
+                        <a style="color: black;" href="{{ url_for('edit_chap', chapter_id=chap['id'], subject_id=chap['subject_id']) }}">Edit</a>
+                        <a style="color: black;" href="{{ url_for('del_chap', subject_id=sub['id'], chapter_id=chap['id']) }}" onclick="return confirm('Are you sure you want to delete the chapter? All the quizzes associated with it will also be deleted')">Delete</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </table>
-            <a href="{{url_for('add_chap',subject_id=sub['id']) }}">
+            <a href="{{ url_for('add_chap', subject_id=sub['id']) }}">
                 <button>Add New Chapter</button>
+            </a>
+            <a href="{{ url_for('del_sub', subject_id=sub['id']) }}" onclick="return confirm('Are you sure you want to delete the subject? All the chapters and quizzes associated with it will also be deleted')">
+                <button>Delete Subject</button>
             </a>
             {% endfor %}
         </main>
         
         <footer>
-            <a href="{{url_for('add_sub')}}">
-            <button>Add new subject</button>
+            <a href="{{ url_for('add_sub') }}">
+                <button>Add new subject</button>
             </a>
         </footer>
+
+        <script>
+            document.getElementById('search').addEventListener('input', function () {
+            let sval=this.value.toLowerCase();
+            let cat=document.getElementById('cat').value;
+            document.querySelectorAll('.subject-table').forEach(table => {
+                    let subname=table.querySelector('.subject-name').textContent.toLowerCase();
+                    let chap=table.querySelectorAll('.chapter-row');
+
+                    let submatch=cat==="subject" && subname.includes(sval);
+                    let haschapmatch=false;
+
+                    chap.forEach(row => {
+                        let chapname=row.querySelector('.chapter-name').textContent.toLowerCase();
+                        let chapmatch=cat==="chapter" && chapname.includes(sval);
+
+                        if(chapmatch){
+                            haschapmatch=true;
+                            row.style.display="";
+                        } 
+                        else{
+                            row.style.display=cat==="chapter" ? "none" : "";
+                        }
+                    });
+
+                    if (submatch || haschapmatch){
+                        table.style.display="";
+                    } 
+                    else {
+                        table.style.display="none";
+                    }
+                });
+            });
+        </script>
     </body>
 </html>

@@ -29,14 +29,14 @@
                 </div>
                 <div class="down">
                     <div>
-                        <input type="search" name="search" id="search" placeholder="Search for quizzes">
+                        <input type="search" name="search" id="search" placeholder="Search for quizzes" onkeyup="filterq()">
                     </div>
                     <div class="down2">
                     <button>Welcome Admin</button>
                 </div>
                     <div class="drop">
                         <a href="#">Edit password</a>
-                        <a href="{{url_for('logout')}}">Logout</a>
+                        <a href="{{ url_for('logout') }}">Logout</a>
                     </div>
                 </div>
             </nav>
@@ -50,13 +50,13 @@
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-            <table>
+            <table id="qtable">
                 <tr>
                     <th>ID</th>
-                    <th>Quiz title</th>
+                    <th>Quiz Name</th>
                     <th>Date of Quiz</th>
                     <th>Time Duration</th>
-                    <th>Number of Questions</th>
+                  <th>Number of Questions</th>
                     <th>Actions</th>
                 </tr>
                 {% for quiz in avail_quiz %}
@@ -65,17 +65,38 @@
                     <td>{{quiz['quiz_name']}}</td>
                     <td>{{quiz['date_of_quiz']}}</td>
                     <td>{{quiz['time_duration']}}</td>
-                    <td>{{quiz['']}}</td>
+                    <td>{{quiz['q_count']}}</td>
                     <td><a style="color: black;" href="{{ url_for('view_qsns',quiz_id=quiz['id'],chapter_id=chapter_id) }}">View</a>
                         <a style="color: black;" href="{{ url_for('edit_quiz',quiz_id=quiz['id'],chapter_id=chapter_id) }}">Edit</a>
+                        <a style="color: black;" href="{{ url_for('del_quiz',quiz_id=quiz['id'],chapter_id=chapter_id) }}" onclick="return confirm('Are you sure you want to delete the quiz?All the questions of it will also be deleted')">Delete</a>
                     </td>
 
-                    <!-- also add for delete button here -->
-                    <!-- <a href="" onclick="return confirm('Are you sure?')">Delete</a> -->
                 </tr>
                 {% endfor %}
             </table>
             <a style="color: black;" href="{{ url_for('add_quiz',chapter_id=chapter_id) }}">Add a quiz</a>
+            <a style="color: black;" href="{{ url_for('admin_home') }}">Go Back</a>
         </main>
+        <script>
+            function filterq(){
+                let inp=document.getElementById("search");
+                let filter=inp.value.toLowerCase();
+                let tab=document.getElementById("qtable");
+                let rows=tab.getElementsByTagName("tr");
+
+                for(let i=1;i<rows.length;i++){
+                    qtit=rows[i].getElementsByTagName("td")[1];
+                    if(qtit){
+                        let txt=qtit.textContent || qtit.innerText;
+                        if(txt.toLowerCase().indexOf(filter)>-1){
+                            rows[i].style.display="";
+                        }
+                        else{
+                            rows[i].style.display="none";
+                        }
+                    }
+                }
+            }
+        </script>
     </body>
 </html>

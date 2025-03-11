@@ -29,7 +29,7 @@
                 </div>
                 <div class="down">
                     <div>
-                        <input type="search" name="search" id="search" placeholder="Search for quizzes">
+                        <input type="search" name="search" id="search" placeholder="Search for quizzes" onkeyup="filterq()">
                     </div>
                     <div class="down2">
                     <button>Welcome {{name}}</button>
@@ -46,11 +46,11 @@
             {% with msgs =get_flashed_messages(with_categories=true) %}
                 {% if msgs %}   
                     {% for cat,msg in msgs %}
-                    <div class="cat">{{msg}}</div>
+                        <div class="cat">{{msg}}</div>
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-            <table>
+            <table id="qtable">
                 <tr>
                     <th>ID</th>
                     <th>Quiz title</th>
@@ -73,5 +73,26 @@
             </table>
             <a style="color: black;" href="{{ url_for('user_home') }}">Go Back</a>
         </main>
+        <script>
+            function filterq(){
+                let inp=document.getElementById("search");
+                let filter=inp.value.toLowerCase();
+                let tab=document.getElementById("qtable");
+                let rows=tab.getElementsByTagName("tr");
+
+                for(let i=1;i<rows.length;i++){
+                    qtit=rows[i].getElementsByTagName("td")[1];
+                    if(qtit){
+                        let txt=qtit.textContent || qtit.innerText;
+                        if(txt.toLowerCase().indexOf(filter)>-1){
+                            rows[i].style.display="";
+                        }
+                        else{
+                            rows[i].style.display="none";
+                        }
+                    }
+                }
+            }
+        </script>
     </body>
 </html>
