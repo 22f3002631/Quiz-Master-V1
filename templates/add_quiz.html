@@ -5,61 +5,43 @@
         <meta name="viewport" content="width=device-width;initial-scale=1.0">
         <title>Add Quiz</title>
         <link rel="stylesheet" href="/static/nav.css">
-        <style>
-            main{
-                align-items: center;
-                margin-top: 100px;
-            }
-            legend{
-                text-align: center;
-            }
-            table,th,td{
-                border: 2px solid blue;
-                border-collapse: collapse;
-            }
-        </style>
+        <link rel="stylesheet" href="/static/addeditany.css">
     </head>
     <body>
         <header>
             <nav>
                 <div class="navbar">
-                    <a href="#">Home</a>
-                    <a href="#">Quiz</a>
-                    <a href="#">Summary</a>
+                    <a href="{{url_for('admin_home')}}">Home</a>
+                    <a href="{{url_for('allusers')}}">Users</a>
+                    <a href="{{url_for('summary')}}">Summary</a>
                 </div>
                 <div class="down">
-                    <div>
-                        <input type="search" name="search" id="search" placeholder="Search for quizzes">
-                    </div>
                     <div class="down2">
-                    <button>Welcome Admin</button>
-                </div>
-                    <div class="drop">
-                        <a href="#">Edit password</a>
-                        <a href="{{url_for('logout')}}">Logout</a>
+                        <button>Welcome Admin</button>
+                        <div class="drop">
+                            <a href="#">Edit password</a>
+                            <a href="{{url_for('logout')}}">Logout</a>
+                        </div>
                     </div>
                 </div>
             </nav>
         </header>
         <main>
-            <fieldset>
+            <div>
                 <form action="{{url_for('add_quiz',chapter_id=chapter_id )}}" method="POST">
                     <label for="qname">Quiz Name:</label>
                     <input type="text" name="qname" id="qname" required>
                     <br>
                     <label for="doq">Date of quiz:</label>
-                    <input type="date" name="doq" id="doq" required>
+                    <input type="date" name="doq" id="doq" min="2025-03-15" required>
                     <br>
                     <label for="tdur">Time Duration:</label>
-                    <input type="text" name="tdur" id="tdur" required placeholder="enter in mins">
+                    <input type="number" name="tdur" id="tdur" min="5" required placeholder="enter in mins">
                     <br>
-                    
-                    <button type="submit">Add Quiz</button>
-                    <!-- <a href="{{url_for('view_quizzes',chapter_id=chapter_id )}}">
-                        <button>Close</button>
-                    </a> -->
+                    <input type="submit" value="Add Quiz">
                 </form>
-            </fieldset>
+            </div>
+            <a class="goback" href="{{url_for('view_quizzes',chapter_id=chapter_id )}}">Go Back</a>
         </main>
     </body>
 </html>
