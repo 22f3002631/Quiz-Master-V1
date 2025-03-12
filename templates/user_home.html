@@ -5,25 +5,7 @@
         <meta name="viewport" content="width=device-width;initial-scale=1.0">
         <title>Home</title>
         <link rel="stylesheet" href="/static/nav.css">
-        <style>
-            main {
-                align-items: center;
-                margin-top: 100px;
-            }
-            legend {
-                text-align: center;
-            }
-            table, th, td {
-                border: 2px solid blue;
-                border-collapse: collapse;
-            }
-            .search-container {
-                margin-bottom: 20px;
-                display: flex;
-                gap: 10px;
-                align-items: center;
-            }
-        </style>
+        <link rel="stylesheet" href="/static/home.css">
     </head>
     <body>
         <header>
@@ -31,7 +13,7 @@
                 <div class="navbar">
                     <a href="{{url_for('user_home')}}">Home</a>
                     <a href="{{url_for('user_score')}}">Scores</a>
-                    <a href="#">Summary</a>
+                    <a href="{{url_for('user_summary')}}">Summary</a>
                 </div>
                 <div class="down">
                     <div class="search-container">
@@ -43,10 +25,10 @@
                     </div>
                     <div class="down2">
                         <button>Welcome {{name}}</button>
-                    </div>
-                    <div class="drop">
-                        <a href="#">Edit profile</a>
-                        <a href="{{url_for('logout')}}">Logout</a>
+                        <div class="drop">
+                            <a href="#">Edit profile</a>
+                            <a href="{{url_for('logout')}}">Logout</a>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -61,58 +43,25 @@
             {% endwith %}
 
             {% for sub in sub_l %}
-            <table class="subject-table">
-                <caption class="subject-name">{{ sub['name'] }}</caption>
+            <table class="subtab">
+                <caption class="subname">{{ sub['name'] }}</caption>
                 <tr>
                     <th>Chapter name</th>
                     <th>No. of Questions</th>
                     <th>Actions</th>
                 </tr>
                 {% for chap in sub['chapters'] %}
-                <tr class="chapter-row">
-                    <td class="chapter-name">{{ chap['name'] }}</td>
+                <tr class="crow">
+                    <td class="cname">{{ chap['name'] }}</td>
                     <td>{{ chap['q_count'] }}</td>
                     <td>
-                        <a style="color: black;" href="{{ url_for('user_viewquiz', chapter_id=chap['id']) }}">View</a>
+                        <b><a style="color: black;" href="{{ url_for('user_viewquiz', chapter_id=chap['id']) }}">View</a></b>
                     </td>
                 </tr>
                 {% endfor %}
             </table>
             {% endfor %}
         </main>
-
-        <script>
-            document.getElementById('search').addEventListener('input', function () {
-            let sval=this.value.toLowerCase();
-            let cat=document.getElementById('cat').value;
-            document.querySelectorAll('.subject-table').forEach(table => {
-                    let subname=table.querySelector('.subject-name').textContent.toLowerCase();
-                    let chap=table.querySelectorAll('.chapter-row');
-
-                    let submatch=cat==="subject" && subname.includes(sval);
-                    let haschapmatch=false;
-
-                    chap.forEach(row => {
-                        let chapname=row.querySelector('.chapter-name').textContent.toLowerCase();
-                        let chapmatch=cat==="chapter" && chapname.includes(sval);
-
-                        if(chapmatch){
-                            haschapmatch=true;
-                            row.style.display="";
-                        } 
-                        else{
-                            row.style.display=cat==="chapter" ? "none" : "";
-                        }
-                    });
-
-                    if (submatch || haschapmatch){
-                        table.style.display="";
-                    } 
-                    else {
-                        table.style.display="none";
-                    }
-                });
-            });
-        </script>
+        <script src="static/homesearch.js"></script>
     </body>
 </html>
