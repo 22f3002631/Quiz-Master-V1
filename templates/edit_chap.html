@@ -5,41 +5,30 @@
         <meta name="viewport" content="width=device-width;initial-scale=1.0">
         <title>Add Chapter</title>
         <link rel="stylesheet" href="/static/nav.css">
-        <style>
-            main{
-                align-items: center;
-                margin-top: 100px;
-            }
-            legend{
-                text-align: center;
-            }
-        </style>
+        <link rel="stylesheet" href="/static/addeditany.css">
     </head>
     <body>
         <header>
             <nav>
                 <div class="navbar">
-                    <a href="#">Home</a>
-                    <a href="#">Quiz</a>
-                    <a href="#">Summary</a>
+                    <a href="{{url_for('admin_home')}}">Home</a>
+                    <a href="{{url_for('allusers')}}">Users</a>
+                    <a href="{{url_for('summary')}}">Summary</a>
                 </div>
                 <div class="down">
-                    <div>
-                        <input type="search" name="search" id="search" placeholder="Search for quizzes">
-                    </div>
                     <div class="down2">
                     <button>Welcome Admin</button>
-                </div>
                     <div class="drop">
                         <a href="#">Edit password</a>
                         <a href="{{url_for('logout')}}">Logout</a>
                     </div>
                 </div>
+            </div>
             </nav>
         </header>
         <main>
-            <!-- <h1>{{sub_name}}</h1> -->
-            <fieldset>
+            <h1>{{sub_name}}</h1>
+            <div>
                 <legend>Add Chapter</legend>
                 <form action="{{url_for('edit_chap',chapter_id=chapter['id'] ) }}" method="POST">
                     <label for="cname">Chapter Name:</label>
@@ -51,8 +40,8 @@
                     <br>
                     <input type="submit" value="Submit">
                 </form>
-            </fieldset>
-            <a style="color: black;" href="{{url_for('admin_home')}}">Go back</a>
+            </div>
+            <a class="goback" style="color: black;" href="{{url_for('admin_home')}}">Go back</a>
         </main>
     </body>
 </html>
