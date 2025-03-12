@@ -1,37 +1,19 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width;initial-scale=1.0">
         <title>Admin Home</title>
         <link rel="stylesheet" href="/static/nav.css">
-        <style>
-            main {
-                align-items: center;
-                margin-top: 100px;
-            }
-            legend {
-                text-align: center;
-            }
-            table, th, td {
-                border: 2px solid blue;
-                border-collapse: collapse;
-            }
-            .search-container {
-                margin-bottom: 20px;
-                display: flex;
-                gap: 10px;
-                align-items: center;
-            }
-        </style>
+        <link rel="stylesheet" href="/static/home.css">
     </head>
     <body>
         <header>
             <nav>
                 <div class="navbar">
-                    <a href="#">Home</a>
-                    <a href="#">Quiz</a>
-                    <a href="#">Summary</a>
+                    <a href="{{url_for('admin_home')}}">Home</a>
+                    <a href="{{url_for('allusers')}}">Users</a>
+                    <a href="{{url_for('summary')}}">Summary</a>
                 </div>
                 <div class="down">
                     <div class="search-container">
@@ -43,10 +25,10 @@
                     </div>
                     <div class="down2">
                         <button>Welcome Admin</button>
-                    </div>
-                    <div class="drop">
-                        <a href="#">Edit password</a>
-                        <a href="{{url_for('logout')}}">Logout</a>
+                        <div class="drop">
+                            <a href="#">Edit password</a>
+                            <a href="{{url_for('logout')}}">Logout</a>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -61,16 +43,16 @@
             {% endwith %}
 
             {% for sub in sub_l %}
-            <table class="subject-table">
-                <caption class="subject-name">{{ sub['name'] }}</caption>
+            <table class="subtab">
+                <b><caption class="subname">{{ sub['name'] }}</caption></b>
                 <tr>
                     <th>Chapter name</th>
                     <th>No. of Questions</th>
                     <th>Actions</th>
                 </tr>
                 {% for chap in sub['chapters'] %}
-                <tr class="chapter-row">
-                    <td class="chapter-name">{{ chap['name'] }}</td>
+                <tr class="crow">
+                    <td  class="cname">{{ chap['name'] }}</td>
                     <td>{{ chap['q_count'] }}</td>
                     <td>
                         <a style="color: black;" href="{{ url_for('view_quizzes', chapter_id=chap['id']) }}">View</a>
@@ -80,12 +62,14 @@
                 </tr>
                 {% endfor %}
             </table>
+            <div class="buts">
             <a href="{{ url_for('add_chap', subject_id=sub['id']) }}">
-                <button>Add New Chapter</button>
+                <button class="but butadd">Add New Chapter</button>
             </a>
             <a href="{{ url_for('del_sub', subject_id=sub['id']) }}" onclick="return confirm('Are you sure you want to delete the subject? All the chapters and quizzes associated with it will also be deleted')">
-                <button>Delete Subject</button>
+                <button class="but butdel">Delete Subject</button>
             </a>
+        </div>
             {% endfor %}
         </main>
         
@@ -99,15 +83,16 @@
             document.getElementById('search').addEventListener('input', function () {
             let sval=this.value.toLowerCase();
             let cat=document.getElementById('cat').value;
-            document.querySelectorAll('.subject-table').forEach(table => {
-                    let subname=table.querySelector('.subject-name').textContent.toLowerCase();
-                    let chap=table.querySelectorAll('.chapter-row');
-
+            document.querySelectorAll('.subtab').forEach(table => {
+                    let subname=table.querySelector('.subname').textContent.toLowerCase();
+                    let chap=table.querySelectorAll('.crow');
                     let submatch=cat==="subject" && subname.includes(sval);
                     let haschapmatch=false;
+                    let butadd=table.nextElementSibling;
+                    let butdel=butadd?.nextElementSibling;
 
                     chap.forEach(row => {
-                        let chapname=row.querySelector('.chapter-name').textContent.toLowerCase();
+                        let chapname=row.querySelector('.cname').textContent.toLowerCase();
                         let chapmatch=cat==="chapter" && chapname.includes(sval);
 
                         if(chapmatch){
@@ -121,12 +106,20 @@
 
                     if (submatch || haschapmatch){
                         table.style.display="";
+                        if(butadd)
+                            butadd.style.display="";
+                        if(butdel)
+                            butdel.style.display="";
                     } 
                     else {
                         table.style.display="none";
+                        if(butadd)
+                            butadd.style.display="none";
+                        if(butdel)
+                            butdel.style.display="none";
                     }
                 });
             });
         </script>
     </body>
-</html>
+</html> 
