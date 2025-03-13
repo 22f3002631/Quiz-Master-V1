@@ -35,8 +35,8 @@
                     <label for="doq">Date of quiz:</label>
                     <input type="date" name="doq" id="doq" min="2025-03-15" value="{{quiz['date_of_quiz']}}" required>
                     <br>
-                    <label for="tdur">Time Duration:</label>
-                    <input type="number" name="tdur" id="tdur" min="5" value="{{quiz['time_duration']}}" required placeholder="enter in mins">
+                    <b><label for="tdur">Time Duration:(in minutes)</label></b>
+                    <input type="number" name="tdur" id="tdur" min="5" value="{{quiz['time_duration']}}" required placeholder="Enter in mins">
                     <br>
                     
                     <input type="submit" value="Edit Quiz">
