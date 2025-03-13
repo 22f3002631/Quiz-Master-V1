@@ -54,7 +54,7 @@
                 <tr class="crow">
                     <td  class="cname">{{ chap['name'] }}</td>
                     <td>{{ chap['q_count'] }}</td>
-                    <td>
+                    <td class="tbut">
                         <a style="color: black;" href="{{ url_for('view_quizzes', chapter_id=chap['id']) }}">View</a>
                         <a style="color: black;" href="{{ url_for('edit_chap', chapter_id=chap['id'], subject_id=chap['subject_id']) }}">Edit</a>
                         <a style="color: black;" href="{{ url_for('del_chap', subject_id=sub['id'], chapter_id=chap['id']) }}" onclick="return confirm('Are you sure you want to delete the chapter? All the quizzes associated with it will also be deleted')">Delete</a>
