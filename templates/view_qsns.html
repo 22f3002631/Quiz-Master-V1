@@ -5,17 +5,51 @@
         <meta name="viewport" content="width=device-width;initial-scale=1.0">
         <title>View Questions</title>
         <link rel="stylesheet" href="/static/nav.css">
+        <link rel="stylesheet" href="/static/addeditany.css">
         <style>
             main{
-                align-items: center;
-                margin-top: 100px;
+                max-width: 1200px;
+                margin:auto;
+                margin-top: 30px;
+                padding: 20px;
+                border-radius: 20px;
+                background-color: rgba(255, 255, 255, 0.4);
+                backdrop-filter: blur(10px);
             }
-            legend{
-                text-align: center;
-            }
-            table,th,td{
-                border: 2px solid blue;
+            #qsntable{
                 border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+            .tbut{
+                display: flex;
+                justify-content: space-between;
+                gap: 5px;
+            }
+            a[href*='edit_qsn']{
+                background-color:chocolate ;
+                border-radius: 20px;
+            }
+            a[href*='del_qsn']{
+                background-color: red;
+                border-radius: 20px;
+            }
+            a[href*='edit_qsn']:hover,a[href*='del_qsn']:hover{
+                transform: scale(1.1);
+            }
+            th,td{
+                padding: 10px;
+                background-color: white;
+                border: 1px solid black;
+            }
+            th{
+                background-color: violet;
+            }
+            @media(max-width:770px){
+                #qsntable{
+                    display: block;
+                    width: 100%;
+                    overflow-x: auto;
+                }   
             }
         </style>
     </head>
@@ -23,22 +57,19 @@
         <header>
             <nav>
                 <div class="navbar">
-                    <a href="#">Home</a>
-                    <a href="#">Quiz</a>
-                    <a href="#">Summary</a>
+                    <a href="{{url_for('admin_home')}}">Home</a>
+                    <a href="{{url_for('allusers')}}">Users</a>
+                    <a href="{{url_for('summary')}}">Summary</a>
                 </div>
                 <div class="down">
-                    <div>
-                        <input type="search" name="search" id="search" placeholder="Search for quizzes">
-                    </div>
                     <div class="down2">
                     <button>Welcome Admin</button>
-                </div>
                     <div class="drop">
                         <a href="#">Edit password</a>
                         <a href="{{url_for('logout')}}">Logout</a>
                     </div>
                 </div>
+            </div>
             </nav>
         </header>
         <main>
@@ -50,10 +81,10 @@
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-            <table>
+            <table id="qsntable">
                 <tr>
                     <th>ID</th>
-                    <th>Quiz title</th>
+                    <th>Question title</th>
                     <th>Option 1</th>
                     <th>Option 2</th>
                     <th>Option 3</th>
@@ -70,13 +101,35 @@
                     <td>{{qsn['option3']}}</td>
                     <td>{{qsn['option4']}}</td>
                     <td>{{qsn['correct_option']}}</td>
-                    <td><a style="color: black;" href="{{url_for('edit_qsn',quiz_id=quiz_id,chapter_id=chapter_id,qsn_id=qsn['id'] )}}">Edit</a></td>
-                    <!-- also add for delete button here -->
-                    <!-- <a href="" onclick="return confirm('Are you sure?')">Delete</a> -->
+                    <td class="tbut">
+                        <a style="color: black;" href="{{url_for('edit_qsn',quiz_id=quiz_id,chapter_id=chapter_id,qsn_id=qsn['id'] )}}">Edit</a>
+                        <a style="color: black;" href="{{url_for('del_qsn',quiz_id=quiz_id,chapter_id=chapter_id,qsn_id=qsn['id'] )}}"onclick="return confirm('Are you sure you want to delete the question?')">Delete</a>    
+                </td>
                 </tr>
                 {% endfor %}
             </table>
-            <a style="color: black;" href="{{ url_for('add_qsn',chapter_id=chapter_id,quiz_id=quiz_id) }}">Add a question</a>
+            <a class="qadd" href="{{ url_for('add_qsn',chapter_id=chapter_id,quiz_id=quiz_id) }}">Add a question</a>
         </main>
+            <a class="goback" href="{{ url_for('view_quizzes',chapter_id=chapter_id )}}">Go back to quizzes</a>
     </body>
+    <script>
+        function filterqsn(){
+            searchq=document.getElementById('search').value.toLowerCase();
+            tab=document.getElementById('qsntable');
+            rows=tab.getElementsByTagName('tr');
+
+            for(let i=1;i<rows.length;i++){
+                    qtit=rows[i].getElementsByTagName("td")[1];
+                    if(qtit){
+                        let txt=qtit.textContent || qtit.innerText;
+                        if(txt.toLowerCase().indexOf(searchq)>-1){
+                            rows[i].style.display="";
+                        }
+                        else{
+                            rows[i].style.display="none";
+                        }
+                    }
+                }
+        }
+    </script>
 </html>
