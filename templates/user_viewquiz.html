@@ -53,12 +53,12 @@
                     <div>
                         <input type="search" name="search" id="search" placeholder="Search for quizzes" onkeyup="filterq()">
                     </div>
-                    <div class="down2">
-                    <button>Welcome {{name}}</button>
-                </div>
-                    <div class="drop">
-                        <a href="#">Edit profile</a>
-                        <a href="{{url_for('logout')}}">Logout</a>
+                        <div class="down2">
+                        <button>Welcome {{name}}</button>
+                        <div class="drop">
+                            <a href="#">Edit profile</a>
+                            <a href="{{url_for('logout')}}">Logout</a>
+                        </div>
                     </div>
                 </div>
             </nav>
