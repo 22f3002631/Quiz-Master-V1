@@ -60,6 +60,7 @@
             </nav>
         </header>
         <main>
+            {% if(scores) %}
             <table>
                 <th>Chapter Name</th>
                 <th>Quiz Name</th>
@@ -77,8 +78,11 @@
                     <td><a class="view" style="color: black;" href="{{url_for('viewquiz_attempt',score_id=s['id'] )}}">View</a>
                     </td>
                 </tr>
-                {% endfor %}
+                {% endfor %}                
             </table>
+                {% else %}
+                    <h1>Attend a quiz to view your scores</h1>
+                {% endif %}
         </main>
     </body>
 </html>
