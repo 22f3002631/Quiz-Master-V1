@@ -5,17 +5,18 @@
         <meta name="viewport" content="width=device-width;initial-scale=1.0">
         <title>Add Questions</title>
         <link rel="stylesheet" href="/static/nav.css">
+        <link rel="stylesheet" href="/static/addeditany.css">
         <style>
-            main{
-                align-items: center;
-                margin-top: 100px;
+            body{
+                height: auto;
             }
-            legend{
-                text-align: center;
+            .labinp{
+                display: flex;
+                justify-content: space-evenly;
+                gap: 2 rem;
             }
-            table,th,td{
-                border: 2px solid blue;
-                border-collapse: collapse;
+            input[type="text"],input[type="number"]{
+                width: 50%;
             }
         </style>
     </head>
@@ -23,54 +24,70 @@
         <header>
             <nav>
                 <div class="navbar">
-                    <a href="#">Home</a>
-                    <a href="#">Quiz</a>
-                    <a href="#">Summary</a>
+                    <a href="{{url_for('admin_home')}}">Home</a>
+                    <a href="{{url_for('allusers')}}">Users</a>
+                    <a href="{{url_for('summary')}}">Summary</a>
                 </div>
                 <div class="down">
-                    <div>
-                        <input type="search" name="search" id="search" placeholder="Search for quizzes">
-                    </div>
-                    <div class="down2">
-                    <button>Welcome Admin</button>
-                </div>
-                    <div class="drop">
-                        <a href="#">Edit password</a>
-                        <a href="{{url_for('logout')}}">Logout</a>
+                        <div class="down2">
+                        <button>Welcome Admin</button>
+                        <div class="drop">
+                            <a href="#">Edit password</a>
+                            <a href="{{url_for('logout')}}">Logout</a>
+                        </div>
                     </div>
                 </div>
             </nav>
         </header>
         <main>
-            <fieldset>
+            <div>
+                <b><legend id="asub">Add Question</legend></b>
                 <form action="{{url_for('add_qsn',quiz_id=quiz_id,chapter_id=chapter_id )}}" method="POST">
-                    <label for="qtitle">Question Title:</label>
-                    <input type="text" name="qtitle" id="qtitle" required>
-                    <br>
-                    <label for="qstat">Question statement:</label>
-                    <input type="text" name="qstat" id="qstat" required>
-                    <br>
-                    <label for="op1">Option 1</label>
-                    <input type="text" name="op1" id="op1" required>
-                    <br>
-                    <label for="op2">Option 2:</label>
-                    <input type="text" name="op2" id="op2" required>
-                    <br>
-                    <label for="op3">Option 3:</label>
-                    <input type="text" name="op3" id="op3" required>
-                    <br>
-                    <label for="op4">Option 4:</label>
-                    <input type="text" name="op4" id="op4" required>
-                    <br>
-                    <label for="crtop">Correct Option:</label>
-                    <input type="text" name="crtop" id="crtop" required>
-                    <br>
-                    <button type="submit">Add Question</button>
-                    <!-- <a href="{{url_for('view_quizzes',chapter_id=chapter_id )}}">
-                        <button>Close</button>
-                    </a> -->
+                    <div class="labinp">
+                        <label for="qtitle">Question Title:</label>
+                        <input type="text" name="qtitle" id="qtitle" required>
+                    </div>
+                    <div class="labinp">
+                        <label for="qstat">Question statement:</label>
+                        <input type="text" name="qstat" id="qstat" required>
+                        <br>
+                    </div>
+                    <div class="labinp">
+                        <label for="op1">Option 1</label>
+                        <input type="text" name="op1" id="op1" required>
+                        <br>
+                    </div>
+                    <div class="labinp">
+                        <label for="op2">Option 2:</label>
+                        <input type="text" name="op2" id="op2" required>
+                        <br>
+                    </div>
+                    <div class="labinp">
+                        <label for="op3">Option 3:</label>
+                        <input type="text" name="op3" id="op3" required>
+                        <br>
+                    </div>
+                    <div class="labinp">
+                        <label for="op4">Option 4:</label>
+                        <input type="text" name="op4" id="op4" required>
+                        <br>
+                    </div>
+                    <div class="labinp">
+                        <label for="crtop">Correct Option:</label>
+                        <input type="number" name="crtop" id="crtop" min="1" max="4" placeholder="if answer is option 1,enter 1" required>
+                        <br>
+                    </div>
+                    <div class="labinp">
+                        <label for="anstat">Answer Statement</label>
+                        <input type="text" name="anstat" required>
+                        <br>
+                    </div>
+                    <input type="submit" value="Add Question" >
                 </form>
-            </fieldset>
+            </div>
+            <a class="goback" href="{{url_for('view_qsns',quiz_id=quiz_id,chapter_id=chapter_id )}}">
+                Go Back
+            </a>
         </main>
     </body>
 </html>
