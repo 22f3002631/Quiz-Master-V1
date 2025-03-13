@@ -54,16 +54,16 @@ textarea{
     height: 150px;
     resize: none;
 }
-input[type="submit"]{
+input[type="submit"],.qadd{
     padding: 12px 20px;
     font-size: large;
-    margin-top: 20px;
+    margin: 20px;
     border-radius: 20px;
     background-color: rgb(48, 171, 215);
     border: none;
     transition: all 0.3s ease-in-out;
 }
-input[type="submit"]:hover{
+input[type="submit"]:hover,.qadd:hover{
     background-color: rgb(0, 128, 128);
     transform:scale(1.1);
 }
@@ -81,6 +81,21 @@ input[type="submit"]:hover{
 .goback:hover{
     background-color: brown;
     width: 50%;
+    transform: scale(1.1);
+}
+.but{
+    width: 90%;
+    background-color: cadetblue;
+    border: none;
+    margin: 10px;
+    padding: 12px 15px;
+    font-size: medium;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+.but:hover{
+    background-color: rgb(15, 159, 237);
     transform: scale(1.1);
 }
 
