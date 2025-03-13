@@ -30,9 +30,9 @@ main {
     border-radius: 10px;
 }
 .subname{
-        font-size: large;
-        font-weight: bold;
-        padding: 14px;
+    font-size: large;
+    font-weight: bold;
+    padding: 14px;
 }
 th,td{
     padding: 15px;
@@ -64,11 +64,30 @@ th{
     display: flex;
     justify-content: space-around;
 }
-.subtab a{
-    text-decoration: none;
+.tbut{
+    display: flex;
+    justify-content: space-between;
 }
+a[href*='view_quizzes']{
+    background-color: rgb(91, 176, 91);
+    border-radius: 20px;
+}
+a[href*='user_viewquiz']{
+    background-color: rgb(91, 176, 91);
+    border-radius: 20px;
+}
+a[href*='edit_chap']{
+    background-color:chocolate ;
+    border-radius: 20px;
+}
+
+a[href*='del_chap']{
+    background-color: red;
+    border-radius: 20px;
+}
+
 .subtab a:hover{
-    text-decoration: underline;
+    transform: scale(1.1);
 }
 footer{
     margin-top: 20px;
