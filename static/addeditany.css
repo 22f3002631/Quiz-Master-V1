@@ -1,0 +1,106 @@
+body{
+    height: 100vh;
+}
+main{
+    align-items: center;
+    margin-top: 100px;
+}
+legend{
+    text-align: center;
+}
+main{
+    margin: 20px auto;
+    width: 90%;
+    max-width: 500px;
+    padding: 20px;
+    text-align: center;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    animation: fade 1.3s ease-in-out;
+}
+h1{
+    font-size: 30px;
+    margin-bottom: 30px;
+    animation: slide 1.3s ease-in-out;
+}
+#asub{
+    animation: slide 1.3s ease-in-out;
+}
+legend{
+    font-size: 25px;
+}
+label{
+    display: block;
+    margin-top: 15px;
+}
+input[type="text"],input[type="number"],input[type="date"],textarea{
+    width: 80%;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+input[type="text"]:hover,input[type="number"]:hover,input[type="date"]:hover,textarea:hover{
+    transform: translateY(-5px);
+}
+input[type="text"]:focus,input[type="number"]:focus,input[type="date"]:focus,textarea:focus{
+    background-color: lightgreen;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+textarea{
+    height: 150px;
+    resize: none;
+}
+input[type="submit"]{
+    padding: 12px 20px;
+    font-size: large;
+    margin-top: 20px;
+    border-radius: 20px;
+    background-color: rgb(48, 171, 215);
+    border: none;
+    transition: all 0.3s ease-in-out;
+}
+input[type="submit"]:hover{
+    background-color: rgb(0, 128, 128);
+    transform:scale(1.1);
+}
+
+.goback{
+    display: block;
+    margin: 20px auto;
+    width: 20%;
+    padding: 10px;
+    background-color: chocolate;
+    border-radius: 20px;
+    transition: all 0.5s ease-in-out;
+}
+
+.goback:hover{
+    background-color: brown;
+    width: 50%;
+    transform: scale(1.1);
+}
+
+@keyframes fade{
+    from{
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@keyframes slide{
+    from{
+        opacity: 0;
+        transform: translateX(-400px);
+    }
+    to{
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
