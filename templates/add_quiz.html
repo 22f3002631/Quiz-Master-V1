@@ -28,6 +28,7 @@
         </header>
         <main>
             <div>
+                <b><legend id="asub">Add Quiz</legend></b>
                 <form action="{{url_for('add_quiz',chapter_id=chapter_id )}}" method="POST">
                     <label for="qname">Quiz Name:</label>
                     <input type="text" name="qname" id="qname" required>
