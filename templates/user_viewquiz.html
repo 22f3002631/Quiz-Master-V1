@@ -5,17 +5,39 @@
         <meta name="viewport" content="width=device-width;initial-scale=1.0">
         <title>Home</title>
         <link rel="stylesheet" href="/static/nav.css">
+        <link rel="stylesheet" href="/static/addeditany.css">
         <style>
             main{
-                align-items: center;
-                margin-top: 100px;
+                max-width: 1000px;
+                margin:auto;
+                margin-top: 30px;
+                padding: 20px;
+                border-radius: 20px;
+                background-color: rgba(255, 255, 255, 0.4);
+                backdrop-filter: blur(10px);
             }
-            legend{
-                text-align: center;
-            }
-            table,th,td{
-                border: 2px solid blue;
+            #qtable{
+                margin-bottom: 20px;
                 border-collapse: collapse;
+                table-layout: fixed;
+            }
+            a[href*='attend_quiz']{
+                background-color: rgb(91, 176, 91);
+                border-radius: 20px;
+            }
+            th,td{
+                padding: 10px;
+                background-color: white;
+                border: 1px solid black;
+            }
+            th{
+                background-color: violet;
+            }
+            @media(max-width:770px){
+                #qtable{
+                    display: block;
+                    overflow-x: auto;
+                }   
             }
         </style>
     </head>
@@ -66,12 +88,13 @@
                     <td>{{quiz['date_of_quiz']}}</td>
                     <td>{{quiz['time_duration']}} minutes</td>
                     <td>{{quiz['q_count']}}</td>
-                    <td><a style="color: black;" href="{{url_for('attend_quiz',quiz_id=quiz['id'],chapter_id=chapter_id )}}">Attend</a>
+                    <td>
+                        <a style="color: black;" href="{{url_for('attend_quiz',quiz_id=quiz['id'],chapter_id=chapter_id )}}">Attend</a>
                     </td>
                 </tr>
                 {% endfor %}
             </table>
-            <a style="color: black;" href="{{ url_for('user_home') }}">Go Back</a>
+            <a class="goback" href="{{ url_for('user_home') }}">Go Back</a>
         </main>
         <script>
             function filterq(){
