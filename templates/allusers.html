@@ -59,6 +59,7 @@
                     <a href="{{url_for('summary')}}">Summary</a>
                 </div>
                 <div class="down">
+                        <input type="search" id="search" placeholder="Search..." oninput="filteru()">
                     <div class="down2">
                     <button>Welcome Admin</button>
                     <div class="drop">
@@ -72,7 +73,7 @@
         <main>
             {% if users %}            
             <h1>Users and quiz scores</h1>
-            <table>
+            <table id="utable">
                 <tr>
                     <th>Full name</th>
                     <th>Quiz name</th>
@@ -93,5 +94,26 @@
                 <h1>No user have attended any quizzes</h1>
             {% endif %}
         </main>
+        <script>
+        function filteru(){
+            let inp=document.getElementById("search");
+            let filter=inp.value.toLowerCase();
+            let tab=document.getElementById("utable");
+            let rows=tab.getElementsByTagName("tr");
+
+            for(let i=1;i<rows.length;i++){
+                uname=rows[i].getElementsByTagName("td")[0];
+                if(uname){
+                    let txt=uname.textContent || uname.innerText;
+                    if(txt.toLowerCase().indexOf(filter)>-1){
+                        rows[i].style.display="";
+                    }
+                    else{
+                        rows[i].style.display="none";
+                    }
+                }
+            }
+        }
+    </script>
     </body>
 </html>
