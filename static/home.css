@@ -76,6 +76,9 @@ a[href*='user_viewquiz']{
     background-color: rgb(91, 176, 91);
     border-radius: 20px;
 }
+a[href*='user_viewquiz']:hover{
+    background-color: rgb(91, 255, 91);
+}
 a[href*='edit_chap']{
     background-color:chocolate ;
     border-radius: 20px;
