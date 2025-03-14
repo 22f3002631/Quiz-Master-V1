@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width;initial-scale=1.0">
+        <title>Home</title>
+        <link rel="stylesheet" href="/static/nav.css">
+        <link rel="stylesheet" href="/static/addany.css">
+        <link rel="stylesheet" href="/static/attempt.css">
+        <style>
+            body{
+                height: auto;
+                min-height: 100vh;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div class="navbar">
+                    <a href="{{url_for('admin_home')}}">Home</a>
+                    <a href="{{url_for('allusers')}}">Users</a>
+                    <a href="{{url_for('summary')}}">Summary</a>
+                </div>
+                <div class="down">
+                    <div class="down2">
+                    <button>Welcome Admin</button>
+                    <div class="drop">
+                        <a href="#">Edit password</a>
+                        <a href="{{url_for('logout')}}">Logout</a>
+                    </div>
+                </div>
+            </div>
+            </nav>
+        </header>
+        <main>
+            {% for qsn in qsns %}
+            <fieldset>
+            <h3>{{ qsn['question_statement'] }}</h3>
+            <p>option 1:{{qsn['option1']}}</p>
+            <p>option 2:{{qsn['option2']}}</p>
+            <p>option 3:{{qsn['option3']}}</p>
+            <p>option 4:{{qsn['option4']}}</p>
+            <p>User answer: {{qsn['selected_option']}}</p>
+            <p>Correct Answer: {{qsn['correct_option']}}</p>
+            <p>Explanation:{{qsn['answer_statement']}}</p>
+            </fieldset>
+            {% endfor %}
+        </main>
+    </body>
+</html>
