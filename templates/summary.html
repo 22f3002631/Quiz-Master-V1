@@ -5,21 +5,9 @@
         <meta name="viewport" content="width=device-width;initial-scale=1.0">
         <title>Summary</title>
         <link rel="stylesheet" href="/static/nav.css">
+        <link rel="stylesheet" href="/static/addeditany.css">
+        <link rel="stylesheet" href="/static/summary.css">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <style>
-            .chart{
-                margin: 0 auto;
-                max-width: 400px;
-            }
-            canvas{
-                height: 300px;
-                width: 300px;
-            }
-            #piechart,#barchart{
-                width: 100%;
-                height: 300px;
-            }
-        </style>
     </head>
     <body>
         <header>
@@ -32,14 +20,15 @@
                 <div class="down">
                     <div class="down2">
                         <button>Welcome Admin</button>
-                    </div>
-                    <div class="drop">
-                        <a href="#">Edit password</a>
-                        <a href="{{url_for('logout')}}">Logout</a>
+                        <div class="drop">
+                            <a href="#">Edit password</a>
+                            <a href="{{url_for('logout')}}">Logout</a>
+                        </div>
                     </div>
                 </div>
             </nav>
         </header>
+        <main>
         <h2>Select user</h2>
         <form method="POST" action="{{ url_for('summary') }}">
             <select name="user_id" required>
@@ -52,27 +41,26 @@
             {% endfor %}
             </select>            
             <br>
-            <button type="submit">Show summary</button>
+            <button class="but" type="submit">Show summary</button>
         </form>
 
 {% if seluser %}
         {% if qcount|length > 0 %}
-
-        <h2>Quiz performance</h2>
+        <div class="charts">
+        <h1>Quiz performance</h1>
         <div class="chart">
             <canvas id="piechart"></canvas>
         </div>
 
-        <h2>Quiz attended per subject</h2>
+        <h1>Quiz attended per subject</h1>
         <div class="chart">
             <canvas id="barchart"></canvas>
         </div>
-
+    </div>
         {% else %}
-        <h2>No quizzes taken</h2>
+        <h1>No quizzes taken by selected user</h1>
         {% endif %}
-
-
+        </main>
         <script>
             crt={{crt}};
             incrt={{incrt}};
@@ -89,6 +77,18 @@
                         data:[crt,incrt],
                         backgroundColor:["green","red"]
                     }]
+                },
+                options:{
+                    plugins:{
+                        legend:{
+                            labels:{
+                                color:'black',
+                                font:{
+                                    size:18
+                                }
+                            }
+                        }
+                    }
                 }
             });
             
@@ -102,6 +102,26 @@
                         data:qcount,
                         backgroundColor:["blue"]
                     }]
+                },
+                options:{
+                    scales:{
+                        y:{
+                            beginAtZero: true,
+                            ticks:{
+                                stepSize: 1,
+                            }
+                        }
+                    },
+                    plugins:{
+                        legend:{
+                            labels:{
+                                color:'black',
+                                font:{
+                                    size:18
+                                }
+                            }
+                        }
+                    }
                 }
             });
         </script>
