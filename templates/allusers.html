@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width;initial-scale=1.0">
+        <title>All Users</title>
+        <link rel="stylesheet" href="/static/nav.css">
+        <link rel="stylesheet" href="/static/addeditany.css">
+        <style>
+            main{
+                max-width: 800px;
+                margin:auto;
+                margin-top: 30px;
+                padding: 20px;
+                border-radius: 20px;
+                background-color: rgba(255, 255, 255, 0.4);
+                backdrop-filter: blur(10px);
+            }
+            table{
+                border-collapse: collapse;
+                margin: auto;
+                margin-bottom: 20px;
+            }
+            .tbut{
+                display: flex;
+                justify-content: space-between;
+                gap: 5px;
+            }
+            a[href*='user_attempt']{
+                background-color:rgb(91, 176, 91) ;
+                border-radius: 20px;
+            }
+            a[href*='user_attempt']:hover{
+                background-color: rgb(91, 255, 91);
+            }
+            th,td{
+                padding: 20px;
+                background-color: white;
+                border: 1px solid black;
+            }
+            th{
+                background-color: violet;
+            }
+            @media(max-width:770px){
+                table{
+                    display: block;
+                    width: 100%;
+                    overflow-x: auto;
+                }   
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div class="navbar">
+                    <a href="{{url_for('admin_home')}}">Home</a>
+                    <a href="{{url_for('allusers')}}">Users</a>
+                    <a href="{{url_for('summary')}}">Summary</a>
+                </div>
+                <div class="down">
+                    <div class="down2">
+                    <button>Welcome Admin</button>
+                    <div class="drop">
+                        <a href="#">Edit password</a>
+                        <a href="{{url_for('logout')}}">Logout</a>
+                    </div>
+                </div>
+            </div>
+            </nav>
+        </header>
+        <main>
+            {% if users %}            
+            <h1>Users and quiz scores</h1>
+            <table>
+                <tr>
+                    <th>Full name</th>
+                    <th>Quiz name</th>
+                    <th>Scores</th>
+                    <th>Actions</th>
+                </tr>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.full_name }}</td>
+                    <td>{{ user.quiz_name }}</td>
+                    <td>{{ user.score }}</td>
+                    <td><a style="color: black;" href="{{url_for('user_attempt',score_id=user.score_id) }}">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+                <h1>No user have attended any quizzes</h1>
+            {% endif %}
+        </main>
+    </body>
+</html>
