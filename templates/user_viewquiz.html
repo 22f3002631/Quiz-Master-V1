@@ -7,6 +7,10 @@
         <link rel="stylesheet" href="/static/nav.css">
         <link rel="stylesheet" href="/static/addeditany.css">
         <style>
+            body{
+                height: auto;
+                min-height: 100vh;
+            }
             main{
                 max-width: 1000px;
                 margin:auto;
@@ -68,6 +72,7 @@
             </nav>
         </header>
         <main>
+            {% if avail_quiz %}
             <h1>Quizzes for {{chap_name}}</h1>
             {% with msgs =get_flashed_messages(with_categories=true) %}
                 {% if msgs %}   
@@ -98,6 +103,9 @@
                 </tr>
                 {% endfor %}
             </table>
+            {% else %}
+            <h1>No quizzes for today :), Chill dude</h1>
+            {% endif %}
             <a class="goback" href="{{ url_for('user_home') }}">Go Back</a>
         </main>
         <script>
