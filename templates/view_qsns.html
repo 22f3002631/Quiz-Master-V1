@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="/static/addeditany.css">
         <style>
             main{
-                max-width: 1200px;
+                max-width: 1000px;
                 margin:auto;
                 margin-top: 30px;
                 padding: 20px;
@@ -17,6 +17,7 @@
                 backdrop-filter: blur(10px);
             }
             #qsntable{
+                margin:auto;
                 border-collapse: collapse;
                 margin-bottom: 20px;
             }
@@ -110,7 +111,7 @@
             </table>
             <a class="qadd" href="{{ url_for('add_qsn',chapter_id=chapter_id,quiz_id=quiz_id) }}">Add a question</a>
         </main>
-            <a class="goback" href="{{ url_for('view_quizzes',chapter_id=chapter_id )}}">Go back to quizzes</a>
+            <a class="goback" style="text-align: center;" href="{{ url_for('view_quizzes',chapter_id=chapter_id )}}">Go back to quizzes</a>
     </body>
     <script>
         function filterqsn(){
