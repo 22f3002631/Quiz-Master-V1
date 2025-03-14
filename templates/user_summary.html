@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width;initial-scale=1.0">
+        <title>Summary</title>
+        <link rel="stylesheet" href="/static/nav.css">
+        <link rel="stylesheet" href="/static/addeditany.css">
+        <link rel="stylesheet" href="/static/summary.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div class="navbar">
+                    <a href="{{url_for('user_home')}}">Home</a>
+                    <a href="{{url_for('user_score')}}">Scores</a>
+                    <a href="{{url_for('user_summary')}}">Summary</a>
+                </div>
+                <div class="down">
+                    <div class="down2">
+                        <button>Welcome {{name}}</button>
+                        <div class="drop">
+                            <a href="#">Edit profile</a>
+                            <a href="{{url_for('logout')}}">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main>
+    {% if seluser %}
+        {% if qcount|length > 0 %}
+        <div class="charts">
+        <h1>Quiz performance</h1>
+        <div class="chart">
+            <canvas id="piechart"></canvas>
+        </div>
+
+        <h1>Quiz attended per subject</h1>
+        <div class="chart">
+            <canvas id="barchart"></canvas>
+        </div>
+    </div>
+        {% else %}
+        <h1>Take a quiz to see your performance 😊</h1>
+        {% endif %}
+        </main>
+        <script>
+            crt={{crt}};
+            incrt={{incrt}};
+            subs={{subs|tojson}};
+            qcount={{qcount|tojson}};
+            
+
+            pie=document.getElementById('piechart').getContext('2d');
+            new Chart(pie,{
+                type:'pie',
+                data:{
+                    labels:["Correct Answers","Incorrect Answers"],
+                    datasets:[{
+                        data:[crt,incrt],
+                        backgroundColor:["green","red"]
+                    }]
+                },
+                options:{
+                    plugins:{
+                        legend:{
+                            labels:{
+                                color:'black',
+                                font:{
+                                    size:18
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            bar=document.getElementById('barchart').getContext('2d');
+            new Chart(bar,{
+                type:'bar',
+                data:{
+                    labels:subs,
+                    datasets:[{
+                        label:"Quiz Attended",
+                        data:qcount,
+                        backgroundColor:["blue"]
+                    }]
+                },
+                options:{
+                    scales:{
+                        y:{
+                            beginAtZero: true,
+                            ticks:{
+                                stepSize: 1,
+                            }
+                        }
+                    },
+                    plugins:{
+                        legend:{
+                            labels:{
+                                color:'black',
+                                font:{
+                                    size:18
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+        {% endif %}
+    </body>
+</html>
