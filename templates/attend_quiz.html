@@ -152,6 +152,9 @@
             }
             update();
             let timer=setInterval(update,1000);
+            document.getElementById('quiz-form').addEventListener('submit',function(){
+                formsub=true;
+            })
 
             window.addEventListener("beforeunload",function(event){
                 if(!formsub){
