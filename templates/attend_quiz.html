@@ -6,45 +6,144 @@
         <title>Attend Quiz</title>
         <link rel="stylesheet" href="/static/nav.css">
         <style>
-            main{
-                align-items: center;
-                margin-top: 100px;
-            }
-            legend{
+            body{
+                background: url('/static/attend.jpg') no-repeat center;
+                background-size: cover; 
+                height: auto;
+                min-height: 100vh;
                 text-align: center;
             }
+            h1{
+                margin:20px auto;
+                background-color: rgba(255, 255, 255, 0.4);
+                padding: 20px;
+                width: 70%;
+                border-radius: 10px;
+                color: black;
+                font-size: 50px;
+            }
+            #timer{
+                display: block;
+                color: rgb(0, 0, 0);
+                font-size: 30px;
+                background-color: rgba(255, 255, 255, 0.4);
+                padding: 10px;
+                border-radius: 15px;
+                width: 15%;
+                position: fixed;
+                box-sizing: border-box;
+                z-index: 10;
+            }
+            fieldset{
+                border: none;
+                margin-top: 80px;
+            }
+            .qsns{
+                margin:20px auto;
+                background-color: rgba(255, 255, 255, 0.4);
+                border: none;
+                border-radius: 20px;
+                padding:15px 30px 40px 30px;
+                width: 60%;
+            }
+            .qsns:hover{
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            }
+            .opt-cont{
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+                margin-top: 10px;
+            }
+            p{
+                color: aliceblue;
+                font-size: 20px;
+            }
+            .optlab{
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                background-color: rgba(255, 255, 255, 0.2);
+                padding: 10px;
+                border-radius: 20px;
+                cursor: pointer;
+            }
+            .optlab:hover{
+                background-color: rgba(255, 255, 255, 0.4);
+            }
+            input[type="radio"]{
+                transform: scale(1.5);
+            }
+            button{
+                background-color: red;
+                padding: 20px;
+                color: bisque;
+                border-radius: 20px;
+                font-size: 20px;
+                font-weight: bold;
+                border: none;
+                margin-top: 20px;
+                transition: all 0.3 ease-in-out;
+            }
+            button:hover{
+                transform: scale(1.1);
+                box-shadow: 0 0 20px rgb(255, 0, 0);
+            }
+
         </style>
     </head>
     <body>
        <main>
             <h1>{{quiz['quiz_name']}}</h1>
-            <div id="timer">Time Left: <span id="time-left"></span></div>
+            <div id="timer"><b>Time Left: <span id="time-left"></span></b></div>
             <fieldset>
                 <form id="quiz-form" action="{{url_for('attend_quiz',quiz_id=quiz_id,chapter_id=chapter_id )}}" method="POST">
                     {% for qsn in qsns %}
-                    <fieldset>
-                        <legend>{{qsn['question_title']}}</legend>
-                        <p>{{qsn['question_statement']}}</p>
-                        <input type="radio" name="{{qsn['id']}}" value="1" required> {{ qsn['option1'] }} <br>
-                        <input type="radio" name="{{qsn['id']}}" value="2" required> {{ qsn['option2'] }} <br>
-                        <input type="radio" name="{{qsn['id']}}" value="3" required> {{ qsn['option3'] }} <br>
-                        <input type="radio" name="{{qsn['id']}}" value="4" required> {{ qsn['option4'] }} <br>
-                    </fieldset>
+                    <div class="qsns">
+                        <b><p>{{qsn['question_statement']}}</p></b>
+                        <div class="opt-cont">
+                            <label class="optlab">
+                                <input type="radio" name="{{qsn['id']}}" value="1" required> {{ qsn['option1'] }} <br>
+                            </label>
+                            <label class="optlab">
+                                <input type="radio" name="{{qsn['id']}}" value="2" required> {{ qsn['option2'] }} <br>
+                            </label>
+                            <label class="optlab">
+                                <input type="radio" name="{{qsn['id']}}" value="3" required> {{ qsn['option3'] }} <br>
+                            </label>
+                            <label class="optlab">
+                                <input type="radio" name="{{qsn['id']}}" value="4" required> {{ qsn['option4'] }} <br>
+                            </label>
+                        </div>
+                    </div>
                     {% endfor %}
                     <button type="submit">Submit Quiz</button>
                 </form>
             </fieldset>
         </main>
-        <script>
-            let timeleft={{quiz['time_duration']}}*60;
+        <script> 
+            let tottime="{{quiz['time_duration']}}"*60;
+            let key="timer_"+"{{quiz_id}}"+"{{uid}}";
+            let starttime=localStorage.getItem(key);
+            let currtime=Math.floor(Date.now()/1000);
+            let formsub=false;
+            if(!starttime){
+                localStorage.setItem(key,currtime);
+                starttime=currtime;
+            }
+
+            let timeleft=Math.max(tottime-(currtime-starttime),0);
+
             let timerdisp=document.getElementById('time-left');
-            let quizform=document.getElementById('quiz-form')
+            let quizform=document.getElementById('quiz-form');
             function update(){
                 let mins=Math.floor(timeleft/60);
                 let secs=timeleft % 60;
                 timerdisp.innerText=mins+"m "+(secs<10?"0":"")+secs+" s";
                 if(timeleft<= 0){
                     clearInterval(timer);
+                    localStorage.removeItem(key);
+                    formsub=true;
                     quizform.submit();
                 }
                 else{
@@ -53,6 +152,13 @@
             }
             update();
             let timer=setInterval(update,1000);
+
+            window.addEventListener("beforeunload",function(event){
+                if(!formsub){
+                    event.preventDefault();
+                    event.returnValue="Answers saved so far will be lost if you refresh .Are you sure?";
+                }
+            })
         </script>
     </body>
 </html>
