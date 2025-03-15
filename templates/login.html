@@ -13,11 +13,24 @@
             font-size: 15px;
             color: black;
         }
+        .cat{
+            color: red;
+            background-color: rgba(255,255,255,0.2);
+            font-size: 30px;
+            font-weight: bold;
+        }
     </style>
     </head>
     <body>
         <main> 
             <div class="container">
+                {% with msgs = get_flashed_messages(with_categories=True) %}
+                {% if msgs %}
+                    {% for cat, msg in msgs %}
+                        <div class="cat">{{ msg }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
                 <form action="{{ url_for('login') }}" method="POST">
                 <h1>Zap into the Quiz Master</h1>
                 <div class="input-cont">
