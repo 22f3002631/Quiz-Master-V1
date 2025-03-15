@@ -2,6 +2,7 @@ from flask import Flask,request,redirect,render_template,url_for,session,flash
 import sqlite3 as sql
 import datetime as dt
 from datetime import date
+from werkzeug.security import generate_password_hash,check_password_hash
 
 app=Flask(__name__)
 app.secret_key="secracy_master"
@@ -17,11 +18,10 @@ def login():
         curr=connection.cursor()
         uname=request.form['uname'].strip()
         pwd=request.form['pwd'].strip()
-        curr.execute('SELECT id,full_name,username from user WHERE username=? and password=?',(uname,pwd))
+        curr.execute('SELECT id,full_name,username,password from user WHERE username=? ',(uname,))
         u1=curr.fetchone()
         connection.close()
-
-        if u1:
+        if u1 and check_password_hash(u1[3],pwd):
             session['uid']=u1[0]
             session['fname']=u1[1]
             session['uname']=u1[2]
@@ -51,14 +51,44 @@ def register():
         if exuser:
             return 'user already exists',400
         
+        gpwd=generate_password_hash(pwd)
         curr.execute('''INSERT INTO user(username,password,full_name,qualification,dob)
-                        VALUES (?,?,?,?,?)''',(uname,pwd,fname,qual,dob))
+                        VALUES (?,?,?,?,?)''',(uname,gpwd,fname,qual,dob))
         conn.commit()
         conn.close()
 
         return redirect(url_for('login'))
     
     return render_template('register.html')
+
+@app.route('/edit_profile',methods=["GET",'POST'])
+def edit_profile():
+    conn=sql.connect('quiz_database.db')
+    conn.row_factory=sql.Row
+    curr=conn.cursor()
+    curr.execute('SELECT * from user WHERE id=?',(session['uid'],))
+    exuser=curr.fetchone()
+
+    if request.method=='POST':
+        uname=request.form['uname'].strip()
+        pwd=request.form['pwd'].strip()
+        fname=request.form['fname'].strip()
+        qual=request.form['qual'].strip()
+        dob=request.form['dob'].strip()
+
+        conn=sql.connect('quiz_database.db')
+        curr=conn.cursor()
+        gpwd=generate_password_hash(pwd)
+        curr.execute('''UPDATE user 
+                        SET username=?,password=?,full_name=?,qualification=?,dob=?
+                        WHERE id=?''',(uname,gpwd,fname,qual,dob,session['uid']))
+        conn.commit()
+        conn.close()
+
+        flash(f"Profile edited Succesfully",'success')
+        return redirect(url_for('user_home'))
+    
+    return render_template('edit_profile.html',exuser=exuser)
 
 @app.route('/admin_home',methods=["GET",'POST'])
 def admin_home(): 
@@ -111,6 +141,29 @@ def add_sub():
         return redirect(url_for('admin_home'))
 
     return render_template('add_sub.html')
+
+@app.route('/edit_sub/subject<int:subject_id>',methods=['GET','POST'])
+def edit_sub(subject_id):
+    if 'uid' not in session or session.get('uname')!='admin':
+        return redirect(url_for('login'))
+    
+    conn=sql.connect('quiz_database.db')
+    conn.row_factory=sql.Row
+    curr=conn.cursor()
+    curr.execute('SELECT * from subject where id=?',(subject_id,))
+    sub=curr.fetchone()
+
+    if request.method=='POST':
+        sname=request.form['sname'].strip()
+        sdesc=request.form['sdesc'].strip()
+        curr.execute('UPDATE subject SET name=?,description=? WHERE id=?',(sname,sdesc,subject_id))
+        conn.commit()
+        conn.close()
+
+        flash('Subject edited successfully!','success')
+        return redirect(url_for('admin_home'))
+
+    return render_template('edit_sub.html',subject_id=subject_id,sub=sub)
 
 @app.route('/del_sub/subject<int:subject_id>',methods=['GET'])
 def del_sub(subject_id):
@@ -393,6 +446,108 @@ def del_qsn(chapter_id,quiz_id,qsn_id):
     flash('Question deleted successfully','success')
     return redirect(url_for('view_qsns',chapter_id=chapter_id,quiz_id=quiz_id))
 
+@app.route('/allusers')
+def allusers():
+    if 'uid' not in session or session.get('uname')!='admin':
+       return redirect(url_for('login'))
+
+    conn=sql.connect('quiz_database.db')
+    conn.row_factory=sql.Row
+    curr=conn.cursor()
+    curr.execute('''SELECT user.id,user.full_name,quiz.quiz_name,scores.score,scores.id AS score_id
+                FROM user
+                JOIN scores ON user.id=scores.user_id
+                JOIN quiz ON scores.quiz_id=quiz.id
+                ORDER BY user.id,scores.time_stamp_of_attempt DESC 
+                ''')
+    users=curr.fetchall()
+
+    conn.close()
+    return render_template('allusers.html',users=users)
+
+@app.route('/user_attempt/<int:score_id>')
+def user_attempt(score_id):
+    if 'uid' not in session or session.get('uname')!='admin':
+       return redirect(url_for('login'))
+    
+    conn=sql.connect('quiz_database.db')
+    conn.row_factory=sql.Row
+    curr=conn.cursor()
+    curr.execute('''SELECT question.option1,question.option2,question.option3,question.option4,question.question_statement,question.answer_statement,user_answers.selected_option,question.correct_option
+                FROM user_answers
+                JOIN question ON user_answers.question_id=question.id
+                WHERE user_answers.score_id=?''',(score_id,))
+    
+    qsns=curr.fetchall()
+    conn.close()
+    return render_template('user_attempt.html',qsns=qsns)
+
+def get_users():
+    conn=sql.connect('quiz_database.db')
+    curr=conn.cursor()
+    curr.execute('SELECT id,full_name FROM user')
+    users=curr.fetchall()
+    conn.close()
+    return users
+
+def get_quizzes(user_id):
+    conn=sql.connect('quiz_database.db')
+    curr=conn.cursor()
+    curr.execute('''
+        SELECT SUM (CASE WHEN question.correct_option=user_answers.selected_option THEN 1 ELSE 0 END) AS correct,
+        SUM (CASE WHEN question.correct_option!=user_answers.selected_option THEN 1 ELSE 0 END) AS incorrect
+        FROM user_answers
+        JOIN scores ON user_answers.score_id=scores.id
+        JOIN question ON user_answers.question_id=question.id
+        WHERE scores.user_id=?''',(user_id,))
+    quizzes=curr.fetchone()
+    conn.close()
+    return quizzes if quizzes else (0,0)
+
+def get_qcount(user_id):
+    conn=sql.connect('quiz_database.db')
+    curr=conn.cursor()
+    curr.execute('''
+                SELECT subject.name,COUNT(DISTINCT scores.quiz_id)
+                FROM scores
+                JOIN quiz ON scores.quiz_id=quiz.id
+                JOIN chapter ON quiz.chapter_id=chapter.id
+                JOIN subject ON chapter.subject_id=subject.id
+                WHERE scores.user_id=?
+                GROUP BY subject.name''',(user_id,))
+    
+    qcount=curr.fetchall()
+    conn.close()
+    return qcount
+
+@app.route('/summary',methods=['GET','POST'])
+def summary():
+    if 'uid' not in session or session.get('uname')!='admin':
+       return redirect(url_for('login'))
+    
+
+    users=get_users()
+    seluser=None
+    crt=incrt=0
+    subs=[]
+    qcount=[]
+
+    if request.method=="POST":
+        uid=request.form.get('user_id')
+        seluser=uid
+
+        if uid:
+            quizzes=get_quizzes(uid)
+            crt=quizzes[0]
+            incrt=quizzes[1]
+
+            qall=get_qcount(uid)
+            for q in qall:
+                subs.append(q[0])
+                qcount.append(q[1])
+    
+    return render_template('summary.html',users=users,seluser=seluser,crt=crt,incrt=incrt,subs=subs,qcount=qcount)
+
 @app.route('/user_home')
 def user_home():
     if 'uid' not in session:
@@ -447,8 +602,10 @@ def user_viewquiz(chapter_id):
         SELECT quiz.id,quiz.quiz_name,quiz.date_of_quiz,quiz.time_duration,COUNT(question.id) as q_count FROM quiz
         LEFT JOIN question ON quiz.id=question.quiz_id
         WHERE quiz.chapter_id=? and quiz.date_of_quiz=?
+        AND quiz.id NOT IN (SELECT quiz_id from user_answers WHERE score_id IN(
+                            SELECT id from scores WHERE user_id=?))
         GROUP BY quiz.id
-        ''',(chapter_id,tdy_date))
+        ''',(chapter_id,tdy_date,session['uid']))
     
     avail_quiz=curr.fetchall()
     conn.close()
@@ -488,17 +645,17 @@ def attend_quiz(chapter_id,quiz_id):
             if selop and int(selop)==crtop:
                 score+=1
 
-            curr.execute('INSERT INTO user_answers (score_id,question_id,selected_option) VALUES (?,?,?)',(score_id,qid,selop))
+            curr.execute('INSERT INTO user_answers (score_id,quiz_id,question_id,selected_option) VALUES (?,?,?,?)',(score_id,quiz_id,qid,selop))
         
         curr.execute('UPDATE scores SET score=?,time_stamp_of_attempt=CURRENT_TIMESTAMP WHERE id=?',(score,score_id))
 
         conn.commit()
         conn.close()
 
-        flash(f"QUIZ submitted succ,score: {score}/{totq}",'success')
+        flash(f"QUIZ submitted successfully,check in scores page for score",'success')
         return redirect(url_for('user_home'))
     
-    return render_template('attend_quiz.html',quiz=quiz,qsns=qsns,quiz_id=quiz_id,chapter_id=chapter_id)
+    return render_template('attend_quiz.html',quiz=quiz,qsns=qsns,quiz_id=quiz_id,chapter_id=chapter_id,uid=session['uid'])
 
 @app.route('/user_score',methods=['GET'])
 def user_score():
@@ -511,7 +668,8 @@ def user_score():
 
     curr.execute('''
                 SELECT scores.id,quiz.quiz_name,chapter.name,scores.score,scores.time_stamp_of_attempt,
-                (SELECT COUNT(*) from question WHERE question.quiz_id=quiz.id) AS q_count
+                (SELECT COUNT(*) from question WHERE question.quiz_id=quiz.id) AS q_count,
+                datetime(scores.time_stamp_of_attempt,'localtime') AS time
                 from scores 
                 INNER JOIN quiz ON scores.quiz_id=quiz.id
                 INNER JOIN chapter ON quiz.chapter_id=chapter.id
@@ -530,7 +688,7 @@ def viewquiz_attempt(score_id):
     conn=sql.connect('quiz_database.db')
     conn.row_factory=sql.Row
     curr=conn.cursor()
-    curr.execute('''SELECT question.question_statement,question.correct_option,user_answers.selected_option,question.answer_statement
+    curr.execute('''SELECT question.option1,question.option2,question.option3,question.option4,question.question_statement,question.correct_option,user_answers.selected_option,question.answer_statement
                 FROM user_answers
                 INNER JOIN question ON user_answers.question_id=question.id
                 WHERE user_answers.score_id=?''',(score_id,))
@@ -538,7 +696,29 @@ def viewquiz_attempt(score_id):
     qsns=curr.fetchall()
     conn.close()
 
-    return render_template('viewquiz_attempt.html',qsns=qsns)
+    return render_template('viewquiz_attempt.html',name=session['fname'],qsns=qsns)
+
+@app.route('/user_summary',methods=['GET','POST'])
+def user_summary():
+    if 'uid' not in session:
+            return redirect(url_for('login'))
+
+    seluser=None
+    crt=incrt=0
+    subs=[]
+    qcount=[]
+    seluser=session['uid']
+    if seluser:
+        quizzes=get_quizzes(seluser)
+        crt=quizzes[0]
+        incrt=quizzes[1]
+
+        qall=get_qcount(seluser)
+        for q in qall:
+            subs.append(q[0])
+            qcount.append(q[1])
+    
+    return render_template('user_summary.html',name=session['fname'],seluser=seluser,crt=crt,incrt=incrt,subs=subs,qcount=qcount)
 
 
 @app.route('/logout')
@@ -547,4 +727,4 @@ def logout():
     return redirect(url_for('login',msg="Logged out successfully"))
 
 if __name__=="__main__":
-    app.run()
+    app.run(debug=True)
