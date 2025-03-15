@@ -21,6 +21,7 @@ def login():
         curr.execute('SELECT id,full_name,username,password from user WHERE username=? ',(uname,))
         u1=curr.fetchone()
         connection.close()
+
         if u1 and check_password_hash(u1[3],pwd):
             session['uid']=u1[0]
             session['fname']=u1[1]
@@ -30,7 +31,7 @@ def login():
             else:
                 return redirect(url_for('user_home'))
         else:
-            return 'Invalid Credentials',401
+            flash('Invalid username or password','success')
         
     return render_template('login.html')
 
@@ -49,7 +50,8 @@ def register():
         exuser=curr.fetchone()
 
         if exuser:
-            return 'user already exists',400
+            flash('Username already exists','success')
+            return redirect(url_for('register'))
         
         gpwd=generate_password_hash(pwd)
         curr.execute('''INSERT INTO user(username,password,full_name,qualification,dob)
@@ -85,7 +87,7 @@ def edit_profile():
         conn.commit()
         conn.close()
 
-        flash(f"Profile edited Succesfully",'success')
+        flash("Profile edited Succesfully",'success')
         return redirect(url_for('user_home'))
     
     return render_template('edit_profile.html',exuser=exuser)
