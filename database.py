@@ -1,4 +1,5 @@
 import sqlite3 as sql
+from werkzeug.security import generate_password_hash
 
 connection=sql.connect("quiz_database.db")
 curobj=connection.cursor()
@@ -72,6 +73,7 @@ curobj.execute('''
     CREATE TABLE IF NOT EXISTS user_answers(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     score_id INTEGER NOT NULL,
+    quiz_id INTEGER NOT NULL,
     question_id INTEGER NOT NULL,
     selected_option INTEGER,
     FOREIGN KEY (score_id) REFERENCES scores(id),
@@ -79,10 +81,13 @@ curobj.execute('''
     )
     ''')
 
+pwd='quizmaster$23'
+
 curobj.execute("""
 INSERT INTO user(id,username,password,full_name,qualification,dob) 
-    VALUES (1,'admin','quizmaster$23','Quiz Master','N/A','N/A')
-""")
+    VALUES (1,'admin',?,'Quiz Master','N/A','N/A')
+""",(generate_password_hash(pwd),))
+
 connection.commit()
 connection.close()
 print("Database with all tables created successfully!")
